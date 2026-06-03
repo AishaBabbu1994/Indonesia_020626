@@ -465,6 +465,437 @@
     else updateApiStatus();
 </script>
 </body>
+</html>        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .header-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: bold;
+    }
+    .api-key-indicator {
+        font-size: 0.7rem;
+        background: rgba(255,255,240,0.2);
+        padding: 4px 10px;
+        border-radius: 40px;
+        cursor: pointer;
+    }
+
+    #api-config-bar {
+        background: #fff2e6;
+        padding: 10px 15px;
+        border-bottom: 1px solid #ffe0cc;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        font-size: 0.85rem;
+    }
+    #api-key-input {
+        flex: 3;
+        padding: 8px 12px;
+        border: 1px solid #ffc8a2;
+        border-radius: 30px;
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+    #save-api-btn {
+        background: #c1121f;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 6px 16px;
+        cursor: pointer;
+    }
+    #api-status {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+        border-radius: 20px;
+    }
+
+    #chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 18px 15px;
+        background: #fefcf5;
+        scroll-behavior: smooth;
+    }
+
+    .message {
+        margin: 12px 0;
+        padding: 12px 18px;
+        border-radius: 24px;
+        max-width: 88%;
+        line-height: 1.5;
+        font-size: 0.95rem;
+    }
+    .user {
+        background: #c1121f;
+        color: white;
+        margin-left: auto;
+        border-bottom-right-radius: 6px;
+    }
+    .bot {
+        background: #fce9e6;
+        color: #2d3e50;
+        margin-right: auto;
+        border-bottom-left-radius: 6px;
+        border-left: 3px solid #e63946;
+    }
+
+    /* Bloque de fuentes multi-fuente */
+    .sources-block {
+        margin-top: 15px;
+        padding-top: 12px;
+        border-top: 2px dashed #ffb4a2;
+        font-size: 0.85rem;
+    }
+    .source-category {
+        margin-bottom: 12px;
+    }
+    .category-title {
+        font-weight: bold;
+        color: #b22234;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+    }
+    .source-link {
+        display: block;
+        margin: 5px 0;
+        padding: 5px 8px;
+        background: #fff2ef;
+        border-radius: 20px;
+        text-decoration: none;
+        color: #2c3e66;
+        transition: 0.2s;
+        font-size: 0.8rem;
+    }
+    .source-link:hover {
+        background: #ffe0d9;
+        padding-left: 12px;
+    }
+
+    #chat-input-container {
+        padding: 15px;
+        background: white;
+        border-top: 1px solid #ffe0cc;
+        display: flex;
+        gap: 12px;
+        align-items: flex-end;
+    }
+    #chat-input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 1px solid #ffc8a2;
+        border-radius: 30px;
+        outline: none;
+        resize: none;
+        font-family: inherit;
+        font-size: 16px;
+        background: #fffaf5;
+    }
+    #send-btn {
+        background: #c1121f;
+        color: white;
+        border: none;
+        border-radius: 40px;
+        padding: 10px 24px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    #send-btn:disabled {
+        background: #e6bcb4;
+        cursor: not-allowed;
+    }
+    .mcp-badge {
+        background: #ffecd6;
+        border-radius: 20px;
+        padding: 6px 10px;
+        font-size: 0.7rem;
+        color: #b1624b;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    @media (max-width: 500px) {
+        #chatbot { width: 100% !important; height: 100% !important; bottom: 0; right: 0; border-radius: 0; }
+        #api-config-bar { flex-direction: column; align-items: stretch; }
+    }
+</style>
+</head>
+<body>
+
+<div id="chatbot">
+    <div id="chat-header">
+        <div class="header-title">🇮🇩 Indonesia_020626 <span style="font-size:0.7rem;">MCP · Multi-fuente</span></div>
+        <div class="api-key-indicator" id="key-indicator">🔑 ⚙️</div>
+    </div>
+    
+    <div id="api-config-bar">
+        <input type="text" id="api-key-input" placeholder="Ingresa tu API Key de Groq (gsk_...)" autocomplete="off">
+        <button id="save-api-btn">Guardar clave</button>
+        <span id="api-status">⚪ Sin clave</span>
+    </div>
+
+    <div id="chat-messages">
+        <div class="message bot">
+            🌏 <strong>Indonesia_020626 - Motor de Investigación Multi-Fuente</strong><br>
+            🔍 Busco en <strong>Wikipedia + Google Académico + Semantic Scholar</strong> (artículos revisados por pares).<br>
+            📌 <strong>Primero ingresa tu API Key de Groq</strong> en la barra superior.<br>
+            Luego pregúntame cualquier tema y recibirás un resumen + enlaces académicos y enciclopédicos.
+            <div class="mcp-badge" style="margin-top: 10px;">📚 MCP: Wikipedia · Google Scholar · Semantic Scholar</div>
+        </div>
+    </div>
+    
+    <div id="chat-input-container">
+        <textarea id="chat-input" placeholder="Ej: 'Efectos del cambio climático en arrecifes de coral' o 'Fuentes sobre inteligencia artificial'" rows="1"></textarea>
+        <button id="send-btn">🔎 Investigar</button>
+    </div>
+</div>
+
+<script>
+    // Elementos
+    const messagesEl = document.getElementById('chat-messages');
+    const inputEl = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const apiKeyInput = document.getElementById('api-key-input');
+    const saveApiBtn = document.getElementById('save-api-btn');
+    const apiStatusSpan = document.getElementById('api-status');
+    
+    let currentApiKey = localStorage.getItem('groq_api_key') || '';
+    const MODEL = 'llama-3.3-70b-versatile';
+    const GROQ_API_BASE = 'https://api.groq.com/openai/v1/chat/completions';
+    
+    const SYSTEM_PROMPT = `Eres Indonesia_020626, asistente de investigación con acceso a múltiples fuentes. Proporcionas información objetiva y bien documentada. Al final de tu respuesta, el sistema añadirá automáticamente un bloque con enlaces a Wikipedia, Google Académico y Semantic Scholar. Responde siempre en español de forma clara y estructurada.`;
+    
+    let conversation = [{ role: "system", content: SYSTEM_PROMPT }];
+    
+    // Estado API Key
+    function updateApiStatus() {
+        if (currentApiKey && currentApiKey.trim().startsWith('gsk_')) {
+            apiStatusSpan.innerHTML = '✅ Clave Groq activa';
+            apiStatusSpan.style.background = '#d4edda';
+            apiStatusSpan.style.color = '#155724';
+        } else if (currentApiKey) {
+            apiStatusSpan.innerHTML = '⚠️ Clave con formato incorrecto';
+            apiStatusSpan.style.background = '#fff3cd';
+            apiStatusSpan.style.color = '#856404';
+        } else {
+            apiStatusSpan.innerHTML = '🔴 Sin clave - ingresa tu API Key';
+            apiStatusSpan.style.background = '#f8d7da';
+            apiStatusSpan.style.color = '#721c24';
+        }
+        if (currentApiKey) apiKeyInput.value = currentApiKey;
+        else apiKeyInput.value = '';
+    }
+    
+    function saveApiKey() {
+        let newKey = apiKeyInput.value.trim();
+        if (newKey) {
+            localStorage.setItem('groq_api_key', newKey);
+            currentApiKey = newKey;
+            updateApiStatus();
+            addBotMessage("🔑 API Key guardada. ¡Ahora puedes investigar con múltiples fuentes!");
+        } else {
+            localStorage.removeItem('groq_api_key');
+            currentApiKey = '';
+            updateApiStatus();
+            addBotMessage("❌ Clave eliminada. Ingresa una válida para usar el chatbot.");
+        }
+    }
+    
+    function addBotMessage(text) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message bot';
+        msgDiv.innerHTML = text.replace(/\n/g, '<br>');
+        messagesEl.appendChild(msgDiv);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+    
+    // ----- MCP MULTI-FUENTE -----
+    // 1. Wikipedia (como antes)
+    async function fetchWikipedia(query) {
+        try {
+            const searchQuery = query.trim().toLowerCase();
+            let sources = [];
+            const directUrl = `https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(searchQuery)}`;
+            let resp = await fetch(directUrl, { headers: { 'Api-User-Agent': 'MCP-Indonesia/1.0' } });
+            if (resp.ok) {
+                const data = await resp.json();
+                if (data.title && data.content_urls?.desktop?.page) {
+                    sources.push({ title: data.title, url: data.content_urls.desktop.page, desc: data.extract?.substring(0,150) || "Artículo Wikipedia" });
+                }
+            }
+            if (sources.length === 0) {
+                const searchUrl = `https://es.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchQuery)}&format=json&origin=*&srlimit=2`;
+                const searchRes = await fetch(searchUrl);
+                const searchData = await searchRes.json();
+                if (searchData.query?.search) {
+                    for (let r of searchData.query.search) {
+                        sources.push({ title: r.title, url: `https://es.wikipedia.org/wiki/${encodeURIComponent(r.title.replace(/ /g,'_'))}`, desc: r.snippet?.replace(/<[^>]*>/g,'') || "Resultado Wikipedia" });
+                    }
+                }
+            }
+            return sources.slice(0,2);
+        } catch(e) { return []; }
+    }
+    
+    // 2. Semantic Scholar (API gratuita de artículos académicos)
+    async function fetchSemanticScholar(query) {
+        try {
+            const url = `https://api.semanticscholar.org/graph/v1/paper/search?query=${encodeURIComponent(query)}&limit=3&fields=title,url,year,abstract`;
+            const resp = await fetch(url);
+            if (!resp.ok) return [];
+            const data = await resp.json();
+            const papers = data.data || [];
+            return papers.map(p => ({
+                title: p.title,
+                url: p.url,
+                desc: `${p.year ? p.year + " - " : ""}${p.abstract ? p.abstract.substring(0,120) : "Artículo académico"}`
+            }));
+        } catch(e) { return []; }
+    }
+    
+    // 3. Google Académico (generamos enlaces de búsqueda, no API directa)
+    function getGoogleScholarLinks(query) {
+        const searchUrl = `https://scholar.google.com/scholar?q=${encodeURIComponent(query)}&hl=es`;
+        return [{ title: `Buscar "${query}" en Google Académico`, url: searchUrl, desc: "Artículos, tesis y libros académicos" }];
+    }
+    
+    // Función principal que reúne todas las fuentes
+    async function gatherAllSources(query) {
+        const [wikiSources, scholarPapers] = await Promise.all([
+            fetchWikipedia(query),
+            fetchSemanticScholar(query)
+        ]);
+        const googleLinks = getGoogleScholarLinks(query);
+        
+        return { wikipedia: wikiSources, semanticScholar: scholarPapers, googleScholar: googleLinks };
+    }
+    
+    function formatMultiSources(sourcesObj) {
+        let html = `<div class="sources-block">`;
+        
+        if (sourcesObj.wikipedia && sourcesObj.wikipedia.length > 0) {
+            html += `<div class="source-category"><div class="category-title">📖 Wikipedia</div>`;
+            for (let src of sourcesObj.wikipedia) {
+                html += `<a href="${src.url}" target="_blank" class="source-link">🌐 ${escapeHtml(src.title)} — ${escapeHtml(src.desc)}</a>`;
+            }
+            html += `</div>`;
+        }
+        
+        if (sourcesObj.semanticScholar && sourcesObj.semanticScholar.length > 0) {
+            html += `<div class="source-category"><div class="category-title">🎓 Semantic Scholar (Artículos revisados)</div>`;
+            for (let src of sourcesObj.semanticScholar) {
+                html += `<a href="${src.url}" target="_blank" class="source-link">📄 ${escapeHtml(src.title)} — ${escapeHtml(src.desc)}</a>`;
+            }
+            html += `</div>`;
+        }
+        
+        if (sourcesObj.googleScholar && sourcesObj.googleScholar.length > 0) {
+            html += `<div class="source-category"><div class="category-title">🔎 Google Académico</div>`;
+            for (let src of sourcesObj.googleScholar) {
+                html += `<a href="${src.url}" target="_blank" class="source-link">📚 ${escapeHtml(src.title)} — ${escapeHtml(src.desc)}</a>`;
+            }
+            html += `</div>`;
+        }
+        
+        html += `</div>`;
+        return html;
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    function addMessage(sender, htmlContent) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${sender}`;
+        msgDiv.innerHTML = htmlContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        messagesEl.appendChild(msgDiv);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+    
+    // Envío principal
+    async function sendMessage() {
+        const userText = inputEl.value.trim();
+        if (!userText) return;
+        if (!currentApiKey || !currentApiKey.startsWith('gsk_')) {
+            addBotMessage("⚠️ Necesitas una API Key de Groq válida. Guárdala en la barra superior.");
+            return;
+        }
+        
+        addMessage('user', userText);
+        inputEl.value = '';
+        inputEl.style.height = 'auto';
+        conversation.push({ role: "user", content: userText });
+        
+        sendBtn.disabled = true;
+        sendBtn.innerHTML = '🔍 Recolectando fuentes múltiples...';
+        
+        // Recolectar fuentes de los 3 orígenes en paralelo
+        let allSources = { wikipedia: [], semanticScholar: [], googleScholar: [] };
+        try {
+            allSources = await gatherAllSources(userText);
+        } catch(e) { console.warn("Error en MCP multi-fuente", e); }
+        
+        sendBtn.innerHTML = '🤖 Generando respuesta académica...';
+        
+        let botReply = "";
+        try {
+            const response = await fetch(GROQ_API_BASE, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${currentApiKey}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model: MODEL, messages: conversation, temperature: 0.65, max_tokens: 1200 })
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            botReply = data.choices[0].message.content;
+            conversation.push({ role: "assistant", content: botReply });
+        } catch(err) {
+            botReply = `❌ Error con Groq: ${err.message}. Verifica tu clave o conexión.`;
+        }
+        
+        let finalMessage = botReply;
+        // Añadir bloque de fuentes (si al menos una fuente tiene resultados)
+        if (allSources.wikipedia.length > 0 || allSources.semanticScholar.length > 0 || allSources.googleScholar.length > 0) {
+            finalMessage += formatMultiSources(allSources);
+        } else {
+            finalMessage += `<div class="sources-block"><div class="category-title">🔍 No se encontraron fuentes automáticas</div><div>Intenta reformular tu pregunta para obtener enlaces a estudios y Wikipedia.</div></div>`;
+        }
+        
+        addMessage('bot', finalMessage);
+        
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = '🔎 Investigar';
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+    
+    // Eventos
+    saveApiBtn.addEventListener('click', saveApiKey);
+    sendBtn.addEventListener('click', sendMessage);
+    inputEl.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+    inputEl.addEventListener('input', function() { this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px'; if(this.value === '') this.style.height = 'auto'; });
+    document.getElementById('key-indicator').addEventListener('click', () => apiKeyInput.focus());
+    
+    if (currentApiKey) updateApiStatus();
+    else updateApiStatus();
+</script>
+</body>
 </html>        color: white;
         padding: 12px 16px;
         text-align: center;
