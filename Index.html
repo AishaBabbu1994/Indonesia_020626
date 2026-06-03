@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Indonesia_020626 - Investigación con MCP y API Key propia</title>
+<style>
+    /* Estilos Generales - Basados en original con mejoras */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(145deg, #fef9e6 0%, #fff0e0 100%);
+        margin: 0;
+        min-height: 100vh;
+    }
+
+    /* Contenedor del Chatbot */
+    #chatbot {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 420px;
+        height: 680px;
+        background: #fffdf8;
+        border: 1px solid #ffcc80;
+        border-radius: 28px;
+        box-shadow: 0 20px 40px rgba(200, 60, 30, 0.2);
+        z-index: 9999;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+    }
+
+    /* Cabecera */
+    #chat-header {
+        background: linear-gradient(135deg, #e63946, #c1121f);
+        color: white;
+        padding: 12px 16px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .header-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .api-key-indicator {
+        font-size: 0.7rem;
+        background: rgba(255,255,240,0.2);
+        padding: 4px 10px;
+        border-radius: 40px;
+        cursor: pointer;
+    }
+
+    /* Barra de configuración de API Key */
+    #api-config-bar {
+        background: #fff2e6;
+        padding: 10px 15px;
+        border-bottom: 1px solid #ffe0cc;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        font-size: 0.85rem;
+    }
+    #api-key-input {
+        flex: 3;
+        padding: 8px 12px;
+        border: 1px solid #ffc8a2;
+        border-radius: 30px;
+        font-family: monospace;
+        font-size: 0.8rem;
+        background: white;
+    }
+    #save-api-btn {
+        background: #c1121f;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 6px 16px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.2s;
+    }
+    #api-status {
+        font-size: 0.7rem;
+        color: #2c6e2c;
+        background: #e6f4e6;
+        padding: 4px 10px;
+        border-radius: 20px;
+    }
+
+    /* Área de mensajes */
+    #chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 18px 15px;
+        background: #fefcf5;
+        scroll-behavior: smooth;
+    }
+
+    /* Burbujas */
+    .message {
+        margin: 12px 0;
+        padding: 12px 18px;
+        border-radius: 24px;
+        max-width: 88%;
+        line-height: 1.5;
+        font-size: 0.95rem;
+        word-wrap: break-word;
+    }
+    .user {
+        background: #c1121f;
+        color: white;
+        margin-left: auto;
+        border-bottom-right-radius: 6px;
+    }
+    .bot {
+        background: #fce9e6;
+        color: #2d3e50;
+        margin-right: auto;
+        border-bottom-left-radius: 6px;
+        border-left: 3px solid #e63946;
+    }
+
+    /* Bloque de fuentes */
+    .sources-block {
+        margin-top: 12px;
+        padding-top: 10px;
+        border-top: 2px dashed #ffb4a2;
+        font-size: 0.85rem;
+    }
+    .sources-title {
+        font-weight: bold;
+        color: #b22234;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+    .source-link {
+        display: block;
+        margin: 6px 0;
+        padding: 6px 8px;
+        background: #fff2ef;
+        border-radius: 20px;
+        text-decoration: none;
+        color: #2c3e66;
+        transition: 0.2s;
+        font-size: 0.85rem;
+    }
+    .source-link:hover {
+        background: #ffe0d9;
+        text-decoration: underline;
+        padding-left: 12px;
+    }
+
+    /* Input inferior */
+    #chat-input-container {
+        padding: 15px;
+        background: white;
+        border-top: 1px solid #ffe0cc;
+        display: flex;
+        gap: 12px;
+        align-items: flex-end;
+    }
+    #chat-input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 1px solid #ffc8a2;
+        border-radius: 30px;
+        outline: none;
+        resize: none;
+        font-family: inherit;
+        font-size: 16px;
+        background: #fffaf5;
+        max-height: 110px;
+    }
+    #send-btn {
+        background: #c1121f;
+        color: white;
+        border: none;
+        border-radius: 40px;
+        padding: 10px 24px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.2s;
+    }
+    #send-btn:disabled {
+        background: #e6bcb4;
+        cursor: not-allowed;
+    }
+    .mcp-badge {
+        background: #ffecd6;
+        border-radius: 20px;
+        padding: 6px 10px;
+        font-size: 0.7rem;
+        color: #b1624b;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    @media (max-width: 500px) {
+        #chatbot {
+            width: 100% !important;
+            height: 100% !important;
+            bottom: 0 !important;
+            right: 0 !important;
+            border-radius: 0 !important;
+        }
+        #api-config-bar { flex-direction: column; align-items: stretch; }
+    }
+</style>
+</head>
+<body>
+
+<div id="chatbot">
+    <div id="chat-header">
+        <div class="header-title">🇮🇩 Indonesia_020626 <span style="font-size:0.7rem;">MCP · Fuentes</span></div>
+        <div class="api-key-indicator" id="key-indicator" title="Haz clic para configurar API Key">🔑 ⚙️</div>
+    </div>
+    
+    <!-- Barra para ingresar API Key de Groq -->
+    <div id="api-config-bar">
+        <input type="text" id="api-key-input" placeholder="Ingresa tu API Key de Groq (ej: gsk_...)" autocomplete="off">
+        <button id="save-api-btn">Guardar clave</button>
+        <span id="api-status">⚪ Sin clave</span>
+    </div>
+
+    <div id="chat-messages">
+        <div class="message bot">
+            🌏 <strong>Indonesia_020626</strong> — Módulo de Investigación con fuentes.<br>
+            🔑 <strong>Primero ingresa tu API Key de Groq</strong> en la barra superior (gratuita en console.groq.com).<br>
+            Luego podré buscar información y entregarte enlaces verificados de Wikipedia.
+            <div class="mcp-badge" style="margin-top: 10px;">🔍 MCP: búsqueda automática de fuentes + enlaces</div>
+        </div>
+    </div>
+    
+    <div id="chat-input-container">
+        <textarea id="chat-input" placeholder="Ej: 'Investiga el origen del batik indonesio' o 'Fuentes sobre cambio climático'..." rows="1"></textarea>
+        <button id="send-btn">📘 Investigar</button>
+    </div>
+</div>
+
+<script>
+    // Elementos del DOM
+    const messagesEl = document.getElementById('chat-messages');
+    const inputEl = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const apiKeyInput = document.getElementById('api-key-input');
+    const saveApiBtn = document.getElementById('save-api-btn');
+    const apiStatusSpan = document.getElementById('api-status');
+    
+    // Configuración
+    let currentApiKey = localStorage.getItem('groq_api_key') || '';
+    const MODEL = 'llama-3.3-70b-versatile';
+    const GROQ_API_BASE = 'https://api.groq.com/openai/v1/chat/completions';
+    
+    // System prompt (sin cambios, el mismo asistente de investigación)
+    const SYSTEM_PROMPT = `
+# Rol
+Eres Indonesia_020626, un asistente de investigación especializado en proporcionar información confiable, enlaces y fuentes verificadas. Tu personalidad es metódica, clara y didáctica. Te apasiona el conocimiento basado en evidencia.
+
+# Tarea
+Respondes preguntas de investigación, análisis de temas o dudas generales aportando siempre contexto y, cuando sea posible, referencias a documentos, artículos o enciclopedias. Tus respuestas deben incluir datos objetivos, fechas, nombres y explicaciones ordenadas.
+
+# MCP integrado
+Cuentas con un Módulo de Consulta de Investigación (MCP) que automáticamente enriquece la respuesta con enlaces reales de Wikipedia y fuentes abiertas. Después de tu respuesta principal, presentarás un bloque "📚 Fuentes para investigación:" con los links relevantes extraídos de la búsqueda. Siempre que el usuario pregunte por "investigación", "fuentes", "links" o cualquier tópico factual, activa el modo de fuentes.
+
+# Instrucciones
+- Sé preciso, objetivo y cita principios generales o fechas clave cuando ayude.
+- Si el tema es extenso, resume lo esencial y luego ofrece los enlaces para profundizar.
+- Mantén un tono sereno pero entusiasta del saber.
+- Responde siempre en español, salvo que el usuario pida otro idioma.
+- No inventes URLs; el sistema te proporcionará las fuentes reales después de tu respuesta.
+`;
+    
+    let conversation = [{ role: "system", content: SYSTEM_PROMPT }];
+    
+    // Inicializar estado de API key
+    function updateApiStatus() {
+        if (currentApiKey && currentApiKey.trim().startsWith('gsk_')) {
+            apiStatusSpan.innerHTML = '✅ Clave válida (Groq)';
+            apiStatusSpan.style.background = '#d4edda';
+            apiStatusSpan.style.color = '#155724';
+        } else if (currentApiKey) {
+            apiStatusSpan.innerHTML = '⚠️ Clave parece inválida (debe empezar con gsk_)';
+            apiStatusSpan.style.background = '#fff3cd';
+            apiStatusSpan.style.color = '#856404';
+        } else {
+            apiStatusSpan.innerHTML = '🔴 Sin clave - ingresa tu API Key';
+            apiStatusSpan.style.background = '#f8d7da';
+            apiStatusSpan.style.color = '#721c24';
+        }
+        // Mostrar en el input la clave actual (oculta parcialmente por seguridad)
+        if (currentApiKey) {
+            apiKeyInput.value = currentApiKey;
+        } else {
+            apiKeyInput.value = '';
+        }
+    }
+    
+    // Guardar nueva API key
+    function saveApiKey() {
+        let newKey = apiKeyInput.value.trim();
+        if (newKey) {
+            localStorage.setItem('groq_api_key', newKey);
+            currentApiKey = newKey;
+            updateApiStatus();
+            addBotMessage("🔑 API Key guardada correctamente. ¡Ya puedes hacer preguntas de investigación!");
+        } else {
+            localStorage.removeItem('groq_api_key');
+            currentApiKey = '';
+            updateApiStatus();
+            addBotMessage("❌ Clave eliminada. Por favor ingresa una clave válida de Groq para continuar.");
+        }
+    }
+    
+    // Helper: agregar mensaje del bot directamente
+    function addBotMessage(text) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message bot';
+        msgDiv.innerHTML = text.replace(/\n/g, '<br>');
+        messagesEl.appendChild(msgDiv);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+    
+    // MCP: búsqueda de fuentes en Wikipedia
+    async function fetchWikipediaSources(query) {
+        try {
+            const searchQuery = query.trim().toLowerCase();
+            if (searchQuery.length < 4) return [];
+            // Búsqueda directa
+            const directUrl = `https://es.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(searchQuery)}`;
+            let sources = [];
+            let response = await fetch(directUrl, { headers: { 'Api-User-Agent': 'IndonesiaChatbot/1.0' } });
+            if (response.ok) {
+                const data = await response.json();
+                if (data.title && data.content_urls?.desktop?.page) {
+                    sources.push({
+                        title: data.title,
+                        url: data.content_urls.desktop.page,
+                        extract: data.extract ? data.extract.substring(0, 200) : "Artículo de Wikipedia"
+                    });
+                }
+            }
+            // Si no, búsqueda por API
+            if (sources.length === 0) {
+                const searchUrl = `https://es.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchQuery)}&format=json&origin=*&srlimit=3`;
+                const searchRes = await fetch(searchUrl);
+                const searchData = await searchRes.json();
+                if (searchData.query && searchData.query.search.length) {
+                    for (let result of searchData.query.search) {
+                        const pageUrl = `https://es.wikipedia.org/wiki/${encodeURIComponent(result.title.replace(/ /g, '_'))}`;
+                        sources.push({
+                            title: result.title,
+                            url: pageUrl,
+                            extract: result.snippet ? result.snippet.replace(/<[^>]*>/g, '') : "Artículo relacionado"
+                        });
+                    }
+                }
+            }
+            return sources;
+        } catch (error) {
+            console.warn("Error MCP Wikipedia:", error);
+            return [];
+        }
+    }
+    
+    function formatSourcesBlock(sources) {
+        if (!sources || sources.length === 0) return '';
+        let html = `<div class="sources-block"><div class="sources-title">📚 Fuentes para investigación (MCP activado):</div>`;
+        for (let src of sources) {
+            html += `<a href="${src.url}" target="_blank" rel="noopener noreferrer" class="source-link">
+                        <i>🔗</i> ${escapeHtml(src.title)} — ${escapeHtml(src.extract.substring(0, 100))}...
+                     </a>`;
+        }
+        html += `</div>`;
+        return html;
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    // Agregar mensaje genérico
+    function addMessage(sender, htmlContent) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${sender}`;
+        msgDiv.innerHTML = htmlContent
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/\n/g, '<br>');
+        messagesEl.appendChild(msgDiv);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+    
+    // Envío principal con verificación de API key
+    async function sendMessage() {
+        const userText = inputEl.value.trim();
+        if (!userText) return;
+        
+        // Verificar que exista una API key válida
+        if (!currentApiKey || !currentApiKey.startsWith('gsk_')) {
+            addBotMessage("⚠️ **No hay una API Key de Groq válida.** Por favor ingresa tu clave en la barra superior (obtenla gratis en console.groq.com).");
+            return;
+        }
+        
+        addMessage('user', userText);
+        inputEl.value = '';
+        inputEl.style.height = 'auto';
+        conversation.push({ role: "user", content: userText });
+        
+        sendBtn.disabled = true;
+        sendBtn.innerHTML = '🔎 Investigando + fuentes...';
+        
+        // Obtener fuentes MCP en paralelo
+        let sourceResults = [];
+        try {
+            sourceResults = await fetchWikipediaSources(userText);
+        } catch(e) { console.warn(e); }
+        
+        let botReply = "";
+        try {
+            const response = await fetch(GROQ_API_BASE, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${currentApiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model: MODEL,
+                    messages: conversation,
+                    temperature: 0.65,
+                    max_tokens: 1200,
+                    stream: false
+                })
+            });
+            
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.error?.message || `HTTP ${response.status}`);
+            }
+            const data = await response.json();
+            botReply = data.choices[0].message.content;
+            conversation.push({ role: "assistant", content: botReply });
+        } catch (error) {
+            console.error(error);
+            botReply = `❌ Error en la llamada a Groq: ${error.message}. Verifica tu API Key y conexión.`;
+        }
+        
+        let finalMessage = botReply;
+        if (sourceResults.length > 0) {
+            finalMessage += formatSourcesBlock(sourceResults);
+        } else {
+            finalMessage += `<div class="sources-block"><div class="sources-title">🔍 Sin resultados automáticos en Wikipedia</div>
+            <div style="font-size:0.8rem;">Puedes reformular tu consulta para obtener fuentes específicas.</div></div>`;
+        }
+        
+        addMessage('bot', finalMessage);
+        
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = '📘 Investigar';
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+    
+    // Eventos
+    saveApiBtn.addEventListener('click', saveApiKey);
+    sendBtn.addEventListener('click', sendMessage);
+    inputEl.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+    inputEl.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+        if(this.value === '') this.style.height = 'auto';
+    });
+    
+    // Cargar clave guardada al inicio
+    if (currentApiKey) {
+        updateApiStatus();
+    } else {
+        updateApiStatus();
+        // Mensaje amistoso pidiendo clave
+        setTimeout(() => {
+            addBotMessage("🌱 Para comenzar, pega tu API Key de Groq en la barra superior y guarda. Si no tienes una, regístrate gratis en https://console.groq.com");
+        }, 500);
+    }
+    
+    // Botón de indicador para focar el input de API key
+    document.getElementById('key-indicator').addEventListener('click', () => {
+        apiKeyInput.focus();
+    });
+</script>
+</body>
+</html>
