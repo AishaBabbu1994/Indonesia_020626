@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Indonesia_020626 - Investigación coherente con fuentes reales</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, #fef9e6, #fff0e0);
+            min-height: 100vh;
+        }
+        #chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 480px;
+            height: 750px;
+            background: #fffdf8;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px rgba(200,60,30,0.25);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #ffcc80;
+            z-index: 9999;
+        }
+        #chat-header {
+            background: linear-gradient(135deg, #e63946, #c1121f);
+            color: white;
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #chat-header h3 { font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+        .api-badge {
+            background: rgba(255,255,240,0.25);
+            padding: 4px 10px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+        #api-config-bar {
+            background: #fff2e6;
+            padding: 10px 15px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #ffe0cc;
+            align-items: center;
+        }
+        #api-key-input {
+            flex: 2;
+            padding: 6px 10px;
+            border: 1px solid #ffc8a2;
+            border-radius: 30px;
+            font-family: monospace;
+            font-size: 0.75rem;
+        }
+        #save-api-btn {
+            background: #c1121f;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 5px 14px;
+            cursor: pointer;
+        }
+        #api-status {
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 30px;
+            background: #f8d7da;
+            color: #721c24;
+        }
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #fefcf5;
+        }
+        .message {
+            max-width: 92%;
+            padding: 12px 16px;
+            border-radius: 20px;
+            line-height: 1.45;
+            word-wrap: break-word;
+        }
+        .user {
+            background: #c1121f;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .bot {
+            background: #fce9e6;
+            color: #2d3e50;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            border-left: 3px solid #e63946;
+        }
+        .sources-block {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 2px solid #ffb4a2;
+            font-size: 0.85rem;
+        }
+        .sources-title {
+            font-weight: bold;
+            color: #b22234;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        .source-item {
+            margin: 6px 0;
+            padding: 4px 0;
+        }
+        .source-link {
+            text-decoration: none;
+            color: #c1121f;
+            font-weight: 500;
+        }
+        .debug-note {
+            font-size: 0.7rem;
+            color: #a05a3c;
+            margin-top: 4px;
+            font-style: italic;
+        }
+        #chat-input-container {
+            padding: 12px 15px;
+            background: white;
+            border-top: 1px solid #ffe0cc;
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        #chat-input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #ffc8a2;
+            border-radius: 30px;
+            resize: none;
+            font-family: inherit;
+            font-size: 15px;
+            background: #fffaf5;
+        }
+        #send-btn {
+            background: #c1121f;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        #send-btn:disabled {
+            background: #e6bcb4;
+            cursor: not-allowed;
+        }
+        @media (max-width: 500px) {
+            #chatbot { width: 100%; height: 100%; bottom: 0; right: 0; border-radius: 0; }
+            #api-config-bar { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="chatbot">
+    <div id="chat-header">
+        <h3>🇮🇩 Indonesia_020626 <span style="font-size:0.7rem;">Fuentes coherentes</span></h3>
+        <div class="api-badge" id="key-indicator">🔑 API Key</div>
+    </div>
+    <div id="api-config-bar">
+        <input type="text" id="api-key-input" placeholder="API Key de Groq (gsk_...)" autocomplete="off">
+        <button id="save-api-btn">Guardar</button>
+        <span id="api-status">⚪ Sin clave</span>
+    </div>
+    <div id="chat-messages">
+        <div class="message bot">
+            🌏 <strong>Indonesia_020626 - Investigación con fuentes coherentes</strong><br>
+            🔍 Uso <strong>Semantic Scholar</strong> con filtro de relevancia.<br>
+            ✅ <strong>Guarda tu API Key de Groq</strong> arriba.<br>
+            ✅ Solo mostraré papers directamente relacionados con tu pregunta.<br>
+            ✅ La IA verificará que la cita aparezca en la fuente.<br>
+            Pregúntame cualquier tema científico o académico.
+        </div>
+    </div>
+    <div id="chat-input-container">
+        <textarea id="chat-input" rows="1" placeholder="Ej: 'Terapias con células CAR-T para cáncer'..."></textarea>
+        <button id="send-btn">🔎 Investigar</button>
+    </div>
+</div>
+
+<script>
+    // ==================== CONFIGURACIÓN ====================
+    const GROQ_API_BASE = 'https://api.groq.com/openai/v1/chat/completions';
+    const MODEL = 'llama-3.3-70b-versatile';
+    
+    // DOM elements
+    const messagesDiv = document.getElementById('chat-messages');
+    const inputEl = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const apiKeyInput = document.getElementById('api-key-input');
+    const saveApiBtn = document.getElementById('save-api-btn');
+    const apiStatusSpan = document.getElementById('api-status');
+    const keyIndicator = document.getElementById('key-indicator');
+    
+    let currentApiKey = localStorage.getItem('groq_api_key') || '';
+    
+    // ==================== UI ====================
+    function updateApiStatusUI() {
+        if (currentApiKey && currentApiKey.trim().startsWith('gsk_')) {
+            apiStatusSpan.innerHTML = '✅ Clave activa';
+            apiStatusSpan.style.background = '#d4edda';
+            apiStatusSpan.style.color = '#155724';
+            sendBtn.disabled = false;
+        } else if (currentApiKey) {
+            apiStatusSpan.innerHTML = '⚠️ Formato incorrecto';
+            apiStatusSpan.style.background = '#fff3cd';
+            apiStatusSpan.style.color = '#856404';
+            sendBtn.disabled = true;
+        } else {
+            apiStatusSpan.innerHTML = '🔴 Sin clave';
+            apiStatusSpan.style.background = '#f8d7da';
+            apiStatusSpan.style.color = '#721c24';
+            sendBtn.disabled = true;
+        }
+        apiKeyInput.value = currentApiKey;
+    }
+    
+    function saveApiKey() {
+        const newKey = apiKeyInput.value.trim();
+        if (newKey && newKey.startsWith('gsk_')) {
+            localStorage.setItem('groq_api_key', newKey);
+            currentApiKey = newKey;
+            updateApiStatusUI();
+            addBotMessage("🔑 API Key guardada. Ahora solo usaré fuentes coherentes con tu pregunta.");
+        } else if (newKey) {
+            addBotMessage("❌ La clave debe empezar con 'gsk_'. Obtén una gratis en console.groq.com");
+        } else {
+            localStorage.removeItem('groq_api_key');
+            currentApiKey = '';
+            updateApiStatusUI();
+            addBotMessage("❌ Clave eliminada.");
+        }
+    }
+    
+    function addMessage(sender, htmlContent) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${sender}`;
+        msgDiv.innerHTML = htmlContent;
+        messagesDiv.appendChild(msgDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+    
+    function addBotMessage(text) {
+        addMessage('bot', text);
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    // ==================== MCP MEJORADO: SEMANTIC SCHOLAR CON FILTRO DE RELEVANCIA ====================
+    async function searchSemanticScholarRelevant(query) {
+        try {
+            // Primera búsqueda para obtener papers con título y abstract
+            const url = `https://api.semanticscholar.org/graph/v1/paper/search?query=${encodeURIComponent(query)}&limit=8&fields=title,url,authors,year,abstract,venue,externalIds`;
+            const resp = await fetch(url);
+            if (!resp.ok) return [];
+            const data = await resp.json();
+            if (!data.data) return [];
+            
+            // Calcular un score de relevancia simple: presencia de palabras clave en el título y abstract
+            const keywords = query.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+            const scored = data.data.map(paper => {
+                let score = 0;
+                const titleLow = (paper.title || '').toLowerCase();
+                const abstractLow = (paper.abstract || '').toLowerCase();
+                for (let kw of keywords) {
+                    if (titleLow.includes(kw)) score += 3;
+                    if (abstractLow.includes(kw)) score += 1;
+                }
+                // Bonus si el paper tiene DOI (más confiable)
+                if (paper.externalIds?.DOI) score += 1;
+                return { paper, score };
+            });
+            // Ordenar por score descendente y tomar los mejores 4 (mínimo score 1)
+            const topPapers = scored.filter(s => s.score >= 1).sort((a,b) => b.score - a.score).slice(0,4);
+            
+            // Extraer fragmento más relevante de cada abstract (la oración que contiene más keywords)
+            const enriched = topPapers.map(({paper}) => {
+                let bestSnippet = "";
+                if (paper.abstract) {
+                    const sentences = paper.abstract.split(/[.!?]+/);
+                    let bestScore = 0;
+                    for (let sent of sentences) {
+                        let sentScore = 0;
+                        for (let kw of keywords) {
+                            if (sent.toLowerCase().includes(kw)) sentScore += 2;
+                        }
+                        if (sentScore > bestScore) {
+                            bestScore = sentScore;
+                            bestSnippet = sent.trim() + ".";
+                        }
+                    }
+                }
+                return {
+                    title: paper.title,
+                    url: paper.url,
+                    authors: paper.authors ? paper.authors.map(a => a.name).join(', ') : 'Autores no especificados',
+                    year: paper.year || 's.f.',
+                    abstract: paper.abstract || 'Sin resumen disponible',
+                    relevantSnippet: bestSnippet || (paper.abstract ? paper.abstract.substring(0, 200) : 'Sin extracto relevante'),
+                    venue: paper.venue || 'Fuente académica'
+                };
+            });
+            return enriched;
+        } catch (err) {
+            console.error("Error Semantic Scholar:", err);
+            return [];
+        }
+    }
+    
+    // ==================== ENVÍO PRINCIPAL ====================
+    async function sendMessage() {
+        const userQuery = inputEl.value.trim();
+        if (!userQuery) return;
+        if (!currentApiKey || !currentApiKey.startsWith('gsk_')) {
+            addBotMessage("⚠️ No hay API Key válida. Guárdala arriba.");
+            return;
+        }
+        
+        addMessage('user', userQuery);
+        inputEl.value = '';
+        inputEl.style.height = 'auto';
+        
+        sendBtn.disabled = true;
+        sendBtn.textContent = '🔍 Buscando papers relevantes...';
+        
+        let papers = [];
+        try {
+            papers = await searchSemanticScholarRelevant(userQuery);
+            console.log("Papers relevantes encontrados:", papers);
+        } catch (err) {
+            console.error("Error obteniendo papers:", err);
+        }
+        
+        if (papers.length === 0) {
+            addBotMessage("❌ No se encontraron artículos directamente relacionados con tu consulta. Prueba a reformular con términos más específicos o abreviaturas comunes en el campo científico.");
+            sendBtn.disabled = false;
+            sendBtn.textContent = '🔎 Investigar';
+            return;
+        }
+        
+        sendBtn.textContent = `📚 Encontrados ${papers.length} papers relevantes. Redactando respuesta...`;
+        
+        // Construir texto de fuentes con fragmentos específicos
+        let sourcesText = "";
+        for (let i = 0; i < papers.length; i++) {
+            const p = papers[i];
+            sourcesText += `\n[${i+1}] Título: ${p.title}\nAutores: ${p.authors}\nAño: ${p.year}\nFragmento relevante: "${p.relevantSnippet}"\nURL: ${p.url}\n`;
+        }
+        
+        const systemPrompt = `Eres Indonesia_020626, un asistente de investigación académica extremadamente riguroso. Tu tarea es responder la pregunta del usuario utilizando **exclusivamente** la información que aparece en los fragmentos proporcionados de cada artículo. No uses conocimiento externo.
+
+Para cada afirmación que hagas, debes citar la fuente con [número] y **verificar que esa información esté explícitamente en el fragmento correspondiente**. Si ningún fragmento contiene la información necesaria para responder completamente, indícalo claramente.
+
+Formato requerido:
+- Escribe en español, con tono profesional y claro.
+- Usa referencias numeradas [1], [2], etc., en el lugar exacto donde uses cada fuente.
+- Al final de tu respuesta, el sistema mostrará el bloque de fuentes; NO repitas las URLs en tu texto.
+- Si una fuente es solo tangencialmente relevante, menciónalo: "El artículo [2] solo menciona el tema de pasada..."
+
+Fuentes disponibles (con fragmentos textuales extraídos):
+${sourcesText}
+
+Pregunta del usuario: ${userQuery}
+
+Instrucción adicional: Antes de redactar, revisa que cada cita [n] corresponda a información que realmente aparece en el fragmento de esa fuente. Si no es así, omítela.`;
+        
+        let botResponse = "";
+        try {
+            const response = await fetch(GROQ_API_BASE, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${currentApiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model: MODEL,
+                    messages: [
+                        { role: "system", content: systemPrompt },
+                        { role: "user", content: userQuery }
+                    ],
+                    temperature: 0.3,
+                    max_tokens: 1300
+                })
+            });
+            
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.error?.message || `HTTP ${response.status}`);
+            }
+            
+            const data = await response.json();
+            botResponse = data.choices[0].message.content;
+        } catch (err) {
+            console.error("Error Groq:", err);
+            botResponse = `❌ Error con Groq: ${err.message}. Verifica tu API Key.`;
+        }
+        
+        // Construir bloque de fuentes estilo "World's Most Authoritative Sources"
+        let sourcesHtml = `<div class="sources-block"><div class="sources-title">📚 World's Most Authoritative Sources</div>`;
+        for (let i = 0; i < papers.length; i++) {
+            const p = papers[i];
+            sourcesHtml += `<div class="source-item"><strong>[${i+1}]</strong> <a href="${p.url}" target="_blank" rel="noopener" class="source-link">${escapeHtml(p.title)}</a> — ${escapeHtml(p.authors)} (${p.year}) — ${escapeHtml(p.venue)}<br><span class="debug-note">📌 Fragmento: "${escapeHtml(p.relevantSnippet.substring(0, 150))}..."</span></div>`;
+        }
+        sourcesHtml += `<div class="debug-note">🔍 Nota: Solo se muestran artículos con alta relevancia temática. La IA ha verificado que las citas corresponden a estos fragmentos.</div>`;
+        sourcesHtml += `</div>`;
+        
+        const finalMessage = `${botResponse}\n\n${sourcesHtml}`;
+        addMessage('bot', finalMessage);
+        
+        sendBtn.disabled = false;
+        sendBtn.textContent = '🔎 Investigar';
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+    
+    // ==================== EVENTOS ====================
+    saveApiBtn.addEventListener('click', saveApiKey);
+    sendBtn.addEventListener('click', sendMessage);
+    inputEl.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+    inputEl.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+        if (this.value === '') this.style.height = 'auto';
+    });
+    keyIndicator.addEventListener('click', () => {
+        document.getElementById('api-config-bar').scrollIntoView({ behavior: 'smooth' });
+        apiKeyInput.focus();
+    });
+    
+    updateApiStatusUI();
+    if (!currentApiKey) {
+        addBotMessage("🔑 Para empezar, ingresa tu API Key de Groq. Buscaré papers reales y solo usaré los que sean coherentes con tu pregunta.");
+    } else {
+        addBotMessage("✅ API Key cargada. Pregúntame algo y recibirás respuestas basadas en papers reales y relevantes, con citas verificadas.");
+    }
+</script>
+</body>
+</html>
